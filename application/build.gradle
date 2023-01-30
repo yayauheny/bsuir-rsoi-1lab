@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
 }
 
 group = 'com.github.rsoi'
@@ -22,4 +23,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+application {
+    mainClassName('com.github.rsoi.Main')
 }
