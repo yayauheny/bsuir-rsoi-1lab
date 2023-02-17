@@ -9,6 +9,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -26,5 +27,5 @@ test {
 }
 
 application {
-    mainClassName('com.github.rsoi.Main')
+    mainClassName('com.github.rsoi.SalaryRunner')
 }
