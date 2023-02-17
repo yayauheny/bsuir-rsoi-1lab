@@ -1,40 +1,29 @@
 package com.github.rsoi;
 
+import com.github.rsoi.service.EmployeePrinter;
+import com.github.rsoi.service.SalaryCalculator;
 import com.github.rsoi.domain.Waiter;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SalaryRunner {
-    public static String outputSeparator = "\n-----------------------------------\n";
-
     public static void main(String[] args) {
-        List<Waiter> waiterList = initWaiters(10);
+        HashMap<Month, Double> netProfitList;
+        List<Waiter> waiterList = initWaiters(3);
+        Month currentMonth = LocalDate.now().getMonth();
+        SalaryCalculator.calculateSalary(waiterList, currentMonth);
 
-        StringBuilder output = new StringBuilder();
+        netProfitList = SalaryCalculator.calculateTotalNetProfit(waiterList, currentMonth);
 
-
-        waiterList.stream()
-                .peek(waiter -> {
-                    output.append("\nname:\t\tmonth:\t\tday:\ttablesQuantity:");
-                    output.append(outputSeparator + waiter
-                            + outputSeparator);
-                })
-                .flatMap(waiter -> waiter.getTableList().entrySet().stream())
-                .forEach(map -> output.append("\t\t\t"
-                        + map.getKey().getMonth()
-                        + "\t"
-                        + map.getKey().getDayOfMonth()
-                        + "\t\t"
-                        + map.getValue()
-                        + "\n"
-                ));
-
-        System.out.println(output);
-
+        EmployeePrinter.printSalaries(waiterList, currentMonth);
+        EmployeePrinter.printNetProfit(netProfitList);
     }
 
     public static List<Waiter> initWaiters(int waitersQuantity) {
@@ -58,7 +47,7 @@ public class SalaryRunner {
         }
     }
 
-    //fill HashMap for each waiter by quantity of served tables per day of current month
+    //fill HashMap for each waiter by quantity of served tables per day for current month
     public static void fillWaitersTableLists(List<Waiter> waiterList) {
         int currentYar = LocalDate.now().getYear();
         int currentDayOfMonth = LocalDate.now().getDayOfMonth();
