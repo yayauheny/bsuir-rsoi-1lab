@@ -5,8 +5,13 @@ plugins {
 }
 
 group = 'com.github.rsoi'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_17;
+
+//java {
+//    sourceCompatibility = JavaVersion.VERSION_17;
+//    targetCompatibility = JavaVersion.VERSION_17;
+//}
 
 repositories {
     mavenCentral()
@@ -15,10 +20,17 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7.1'
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+
 
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation(platform('org.junit:junit-bom:5.9.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
+    implementation 'org.springframework:spring-context:6.0.6'
+
 }
 
 test {
@@ -26,5 +38,9 @@ test {
 }
 
 application {
-    mainClassName('com.github.rsoi.Main')
+    mainClassName = 'com.github.rsoi.Main'
+}
+
+build {
+    dependsOn.clear()
 }

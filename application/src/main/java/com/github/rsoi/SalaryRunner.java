@@ -1,8 +1,12 @@
 package com.github.rsoi;
 
+import com.github.rsoi.domain.Waiter;
 import com.github.rsoi.service.EmployeePrinter;
 import com.github.rsoi.service.SalaryCalculator;
-import com.github.rsoi.domain.Waiter;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -10,26 +14,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class SalaryRunner {
     public static void main(String[] args) {
         HashMap<Month, Double> netProfitList;
         List<Waiter> waiterList = initWaiters(3);
+
+        //Spring context
+        ApplicationContext context = new AnnotationConfigApplicationContext(SalaryConfiguration.class);
+        EmployeePrinter printer = context.getBean(EmployeePrinter.class);
+        SalaryCalculator calculator = context.getBean(SalaryCalculator.class);
+
         Month currentMonth = LocalDate.now().getMonth();
-        SalaryCalculator.calculateSalary(waiterList, currentMonth);
+        calculator.calculateSalary(waiterList, currentMonth);
+        netProfitList = calculator.calculateTotalNetProfit(waiterList, currentMonth);
 
-        netProfitList = SalaryCalculator.calculateTotalNetProfit(waiterList, currentMonth);
-
-        EmployeePrinter.printSalaries(waiterList, currentMonth);
-        EmployeePrinter.printNetProfit(netProfitList);
+        printer.printSalaries(waiterList, currentMonth);
+        printer.printNetProfit(netProfitList);
     }
 
     public static List<Waiter> initWaiters(int waitersQuantity) {
         List<Waiter> waiterList = new ArrayList<>();
-        fillWaitersList(waiterList, 3);
+//        List<Waiter> waiterList = WaiterDAO.addWaiterName();
         fillWaitersTableLists(waiterList);
+        fillWaitersList(waiterList, waitersQuantity);
         return waiterList;
     }
 
@@ -61,5 +69,25 @@ public class SalaryRunner {
                         tableQuantityPerDay[rand.nextInt(tableQuantityPerDay.length)]);
             }
         }
+    }
+
+
+}
+
+@Configuration
+class SalaryConfiguration {
+    @Bean
+    public EmployeePrinter employeePrinter() {
+        return new EmployeePrinter();
+    }
+
+    @Bean
+    public SalaryRunner salaryRunner() {
+        return new SalaryRunner();
+    }
+
+    @Bean
+    public SalaryCalculator salaryCalculator() {
+        return new SalaryCalculator();
     }
 }

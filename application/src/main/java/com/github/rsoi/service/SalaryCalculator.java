@@ -1,9 +1,7 @@
 package com.github.rsoi.service;
 
-import com.github.rsoi.domain.Employee;
 import com.github.rsoi.domain.Waiter;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,7 @@ public class SalaryCalculator {
     private static double fine = 20;
     private static double bonus = 5;
 
-    public static void calculateSalary(List<Waiter> waiterList, Month month) {
+    public void calculateSalary(List<Waiter> waiterList, Month month) {
         waiterList.stream()
                 .forEach(waiter -> {
                     int totalTablesPerMonth = waiter.getTableList().entrySet().stream()
@@ -29,7 +27,7 @@ public class SalaryCalculator {
                 });
     }
 
-    private static double calculateBonuses(int tablesQuantity) {
+    private double calculateBonuses(int tablesQuantity) {
         double totalFine;
 
         if (tablesQuantity == tablesToServePerMonth)
@@ -42,12 +40,12 @@ public class SalaryCalculator {
         }
     }
 
-    public static HashMap<Month, Double> calculateTotalNetProfit(List<Waiter> employees, Month month) {
+    public HashMap<Month, Double> calculateTotalNetProfit(List<Waiter> employees, Month month) {
         HashMap<Month, Double> profitList = new HashMap<>();
-
         double totalSalary = employees.stream().mapToDouble(Waiter::getSalary).sum();
         double totalProfit = employees.stream().mapToInt(Waiter::getTotalTablesPerMonth).sum() * profitPerTable;
         double totalNetProfit = totalProfit - totalSalary;
+
         profitList.put(month, totalNetProfit);
         return profitList;
     }

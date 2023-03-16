@@ -13,34 +13,34 @@ public class EmployeePrinter {
     private static String currency = "BYN";
     private static String outputSeparator = "\n-------------------------------------------------------\n";
 
-    public static void printEmployeeInfo(List<Waiter> employeeList, Month month) {
+    public void printEmployeeInfo(List<Waiter> employeeList, Month month) {
         StringBuilder output = new StringBuilder();
         output.append(String.format("\nSalaries info for waiters by the %s\n", month.toString()));
 
         employeeList.stream()
-                .forEach(employe -> {
+                .forEach(employee -> {
                     output.append("\nname:\t\t\t\tday:\t\tserviced tables:");
-                    output.append(outputSeparator + employe + outputSeparator);
-                    employe.getTableList().entrySet().stream()
+                    output.append(outputSeparator + employee + outputSeparator);
+                    employee.getTableList().entrySet().stream()
                             .filter(map -> month.equals(map.getKey().getMonth()))
                             .forEach(map -> output.append("\n\t\t\t\t\t"
                                     + map.getKey().getDayOfMonth()
                                     + "\t\t\t" + map.getValue()));
                     output.append(String.format("\n\nTotal serviced tables: %s\nSalary for %s: %s%s\n",
-                            employe.getTotalTablesPerMonth(), month, employe.getSalary(), currency));
+                            employee.getTotalTablesPerMonth(), month, employee.getSalary(), currency));
                 });
 
         System.out.println(output);
     }
 
-    public static void printSalaries(List<? extends Employee> employeeList, Month month) {
+    public void printSalaries(List<? extends Employee> employeeList, Month month) {
         System.out.println(outputSeparator + "Printing salaries for " + month + outputSeparator);
         HashMap<? extends Employee, Double> salaryList = employeeList.stream()
                 .collect(Collectors.toMap(Function.identity(), Employee::getSalary, (s1, s2) -> s1, HashMap::new));
         salaryList.forEach((key, value) -> System.out.println(key + ": " + value + currency));
     }
 
-    public static void printNetProfit(HashMap<Month, Double> profitList) {
+    public void printNetProfit(HashMap<Month, Double> profitList) {
         System.out.println(outputSeparator + "List of net profit, grouped by month:" + outputSeparator);
         profitList.entrySet().stream().forEach(map -> System.out.println(map.getKey() + ": " + map.getValue()));
     }
